@@ -1,21 +1,30 @@
 import React from "react";
 import { useMemo, useState } from "react";
 import {
+  ArrowRight,
   BadgeCheck,
   Banknote,
   Cpu,
+  Facebook,
   Gamepad2,
+  Heart,
+  Instagram,
   Laptop,
   Leaf,
+  Linkedin,
+  Menu,
   PackageCheck,
   Recycle,
   Search,
   ShieldCheck,
   Smartphone,
   Tablet,
+  Trash2,
   Truck,
+  Twitter,
   Upload,
-  WalletCards
+  WalletCards,
+  X
 } from "lucide-react";
 import {
   brands,
@@ -44,77 +53,225 @@ function App() {
       <InstantQuote quote={quote} />
       <UserDashboard />
       <B2BCatalogue />
+      <Footer />
     </main>
   );
 }
 
-function Navbar() {
+function Footer() {
+  const links = {
+    product: ["How it Works", "Pricing", "For Business", "Sustainability"],
+    company: ["About", "Careers", "Press", "Contact"],
+    legal: ["Privacy", "Terms", "Data Policy", "E-Waste Guidelines"]
+  };
+  const socials = [
+    { icon: Twitter, href: "#" },
+    { icon: Facebook, href: "#" },
+    { icon: Instagram, href: "#" },
+    { icon: Linkedin, href: "#" }
+  ];
+
   return (
-    <header className="sticky top-0 z-30 border-b border-white/60 bg-white/85 backdrop-blur-xl">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
-        <a href="#home" className="flex items-center gap-2 font-black text-2xl tracking-tight">
-          <span className="grid h-10 w-10 place-items-center rounded-lg bg-ink text-limepop">
-            <Recycle size={23} />
-          </span>
-          Eswap
-        </a>
-        <div className="hidden items-center gap-7 text-sm font-semibold text-slate-600 md:flex">
-          <a href="#wizard">Quote</a>
-          <a href="#dashboard">Dashboard</a>
-          <a href="#catalogue">B2B Catalogue</a>
+    <footer className="border-t border-slate-200 bg-white py-16">
+      <div className="mx-auto max-w-7xl px-5">
+        <div className="grid gap-12 lg:grid-cols-[1.5fr_repeat(3,1fr)_auto]">
+          <div>
+            <a href="#home" className="flex items-center gap-2 font-black text-2xl tracking-tight">
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-ink to-slate-800 text-limepop">
+                <Recycle size={22} />
+              </span>
+              <span>Eswap</span>
+            </a>
+            <p className="mt-4 max-w-xs text-sm leading-6 text-slate-500">
+              Pakistan's circular electronics marketplace. Turn dead devices into cash and help save the environment.
+            </p>
+            <div className="mt-6 flex gap-3">
+              {socials.map(({ icon: Icon, href }, index) => (
+                <a
+                  key={index}
+                  href={href}
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition-all hover:border-lagoon hover:text-lagoon"
+                >
+                  <Icon size={18} />
+                </a>
+              ))}
+            </div>
+          </div>
+          {Object.entries(links).map(([title, items]) => (
+            <div key={title}>
+              <h4 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-400">{title}</h4>
+              <ul className="space-y-3">
+                {items.map((item) => (
+                  <li key={item}>
+                    <a href="#" className="text-sm font-medium text-slate-600 transition-colors hover:text-ink">
+                      {item}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
-        <a
-          href="#wizard"
-          className="rounded-lg bg-lagoon px-4 py-2 text-sm font-bold text-white shadow-glow"
-        >
-          Get Instant Quote
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-100 pt-8 text-sm font-medium text-slate-400 sm:flex-row">
+          <p>© 2026 Eswap. All rights reserved.</p>
+          <div className="flex items-center gap-6">
+            <a href="#" className="flex items-center gap-2">
+              <ShieldCheck size={16} /> Data wipe certified
+            </a>
+            <a href="#" className="flex items-center gap-2">
+              <Leaf size={16} /> Eco-certified
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function Navbar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  return (
+    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl shadow-sm">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3">
+        <a href="#home" className="flex items-center gap-2.5 font-black text-2xl tracking-tight transition-transform hover:scale-[1.02]">
+          <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-ink to-slate-800 text-limepop shadow-md">
+            <Recycle size={22} />
+          </span>
+          <span className="hidden sm:inline">Eswap</span>
         </a>
+        <div className="hidden items-center gap-1 text-sm font-semibold text-slate-600 md:flex">
+          {[
+            { href: "#wizard", label: "Get Quote" },
+            { href: "#dashboard", label: "Dashboard" },
+            { href: "#catalogue", label: "B2B Catalogue" }
+          ].map(({ href, label }) => (
+            <a
+              key={href}
+              href={href}
+              className="relative px-4 py-2 rounded-lg text-slate-600 transition-all hover:text-ink before:absolute before:inset-0 before:rounded-lg before:bg-slate-100/50 before:opacity-0 before:transition-opacity hover:before:opacity-100"
+            >
+              {label}
+            </a>
+          ))}
+        </div>
+        <div className="flex items-center gap-2">
+          <a
+            href="#wizard"
+            className="hidden rounded-xl bg-gradient-to-r from-lagoon to-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-blue-500/25 transition-all hover:shadow-lg hover:shadow-blue-500/30 active:scale-[0.98] sm:block"
+          >
+            Get Quote
+          </a>
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="grid h-10 w-10 place-items-center rounded-lg border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 md:hidden"
+          >
+            <span className="text-xl">{mobileOpen ? "✕" : "☰"}</span>
+          </button>
+        </div>
       </nav>
+      {mobileOpen && (
+        <div className="border-t border-slate-100 bg-white/95 px-5 py-4 backdrop-blur-xl md:hidden">
+          <div className="flex flex-col gap-2">
+            {[
+              { href: "#wizard", label: "Get Quote" },
+              { href: "#dashboard", label: "Dashboard" },
+              { href: "#catalogue", label: "B2B Catalogue" }
+            ].map(({ href, label }) => (
+              <a
+                key={href}
+                href={href}
+                onClick={() => setMobileOpen(false)}
+                className="rounded-lg px-4 py-3 text-base font-semibold text-slate-700 transition-colors hover:bg-slate-100"
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
     </header>
   );
 }
 
 function Homepage() {
   return (
-    <section id="home" className="mx-auto grid min-h-[88vh] max-w-7xl items-center gap-10 px-5 py-14 lg:grid-cols-[1.02fr_0.98fr]">
-      <div>
-        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-mint/35 bg-white px-4 py-2 text-sm font-bold text-emerald-700 shadow-sm">
-          <Leaf size={16} /> Pakistan's circular electronics marketplace
-        </div>
-        <h1 className="max-w-3xl text-5xl font-black leading-[1.03] tracking-normal text-ink sm:text-6xl lg:text-7xl">
-          Turn Dead Devices Into Cash
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
-          Eswap gives consumers instant value for broken electronics and routes reusable
-          parts to repair businesses that need reliable components fast.
-        </p>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <a href="#wizard" className="rounded-lg bg-ink px-6 py-4 text-center font-extrabold text-white shadow-soft">
-            Get Instant Quote
-          </a>
-          <a href="#catalogue" className="rounded-lg border border-slate-200 bg-white px-6 py-4 text-center font-extrabold text-ink">
-            Browse Components
-          </a>
-        </div>
-      </div>
-      <div className="relative">
-        <div className="rounded-[32px] border border-white bg-white p-5 shadow-glow">
-          <div className="rounded-[24px] bg-ink p-8 text-white">
-            <div className="flex items-center justify-between">
-              <span className="rounded-full bg-white/10 px-4 py-2 text-sm font-bold">Live impact</span>
-              <Recycle className="text-limepop" />
-            </div>
-            <div className="counter-pulse mt-12">
-              <p className="text-sm font-bold uppercase tracking-[0.18em] text-limepop">E-waste diverted</p>
-              <p className="mt-2 text-6xl font-black sm:text-7xl">128,420 kg</p>
-            </div>
-            <div className="mt-12 grid grid-cols-2 gap-3">
-              {["Phones", "Laptops", "Tablets", "Consoles"].map((label, index) => (
-                <div key={label} className="rounded-xl bg-white/10 p-4">
-                  <p className="text-2xl font-black">{[4820, 1710, 990, 640][index]}</p>
-                  <p className="text-sm text-slate-300">{label} recovered</p>
-                </div>
+    <section id="home" className="relative overflow-hidden">
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,_rgba(21,128,255,0.08),_transparent_50%),_radial-gradient(ellipse_at_bottom_left,_rgba(25,211,162,0.06),_transparent_50%)]" />
+      <div className="mx-auto grid min-h-[88vh] max-w-7xl items-center gap-10 px-5 py-14 lg:grid-cols-[1.02fr_0.98fr]">
+        <div className="relative">
+          <div className="animate-fade-in mb-6 inline-flex items-center gap-2.5 rounded-full border border-mint/40 bg-white/80 px-5 py-2.5 text-sm font-bold text-emerald-700 shadow-md backdrop-blur-sm">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+            </span>
+            Pakistan's circular electronics marketplace
+          </div>
+          <h1 className="animate-slide-up max-w-3xl text-5xl font-black leading-[1.03] tracking-normal text-ink sm:text-6xl lg:text-7xl">
+            Turn Dead <span className="text-transparent bg-clip-text bg-gradient-to-r from-lagoon to-mint">Devices</span> Into Cash
+          </h1>
+          <p className="animate-slide-up mt-6 max-w-2xl text-lg leading-8 text-slate-600">
+            Get instant value for broken electronics. We route reusable parts to repair businesses that need reliable components fast — <span className="text-emerald-600 font-semibold">saving e-waste from landfills</span>.
+          </p>
+          <div className="animate-slide-up mt-10 flex flex-col gap-3 sm:flex-row">
+            <a
+              href="#wizard"
+              className="group flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-ink to-slate-800 px-7 py-4 text-center font-extrabold text-white shadow-lg shadow-slate-800/20 transition-all hover:shadow-xl hover:shadow-slate-800/30 hover:-translate-y-0.5"
+            >
+              Get Instant Quote
+              <ArrowRight className="transition-transform group-hover:translate-x-0.5" size={20} />
+            </a>
+            <a
+              href="#catalogue"
+              className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-7 py-4 text-center font-extrabold text-ink backdrop-blur-sm transition-all hover:border-slate-300 hover:bg-white"
+            >
+              Browse Components
+              <Search size={18} className="text-slate-400" />
+            </a>
+          </div>
+          <div className="animate-fade-in mt-10 flex items-center gap-6 text-sm">
+            <div className="flex -space-x-2">
+              {["bg-rose-400", "bg-amber-400", "bg-emerald-400", "bg-cyan-400"].map((color, i) => (
+                <div key={i} className={`h-8 w-8 rounded-full border-2 border-white ${color}`} />
               ))}
+            </div>
+            <p className="text-slate-500">
+              <strong className="text-ink">2,840+</strong> devices recycled
+            </p>
+          </div>
+        </div>
+        <div className="relative">
+          <div className="relative animate-float rounded-[32px] border border-slate-200/60 bg-white p-6 shadow-2xl shadow-slate-200/50">
+            <div className="absolute -right-4 -top-4 h-24 w-24 rounded-2xl bg-gradient-to-br from-limepop to-mint p-4 shadow-lg">
+              <Trash2 className="h-full w-full text-ink/80" />
+            </div>
+            <div className="absolute -left-3 top-1/2 -translate-y-1/2 rotate-[-8deg] rounded-xl bg-white px-3 py-1.5 text-xs font-bold shadow-md">
+              ⚡ Instant Pay
+            </div>
+            <div className="rounded-[24px] bg-gradient-to-br from-ink to-slate-900 p-8 text-white">
+              <div className="flex items-center justify-between">
+                <span className="rounded-full bg-white/10 px-4 py-2 text-sm font-bold">Live Impact</span>
+                <Recycle className="text-limepop" size={24} />
+              </div>
+              <div className="counter-pulse mt-10">
+                <p className="text-sm font-bold uppercase tracking-[0.18em] text-limepop">E-waste diverted</p>
+                <p className="mt-2 text-5xl font-black sm:text-6xl lg:text-7xl">128,420<span className="text-2xl text-slate-400">kg</span></p>
+              </div>
+              <div className="mt-10 grid grid-cols-2 gap-3">
+                {[
+                  { icon: Smartphone, label: "Phones", value: "4,820" },
+                  { icon: Laptop, label: "Laptops", value: "1,710" },
+                  { icon: Tablet, label: "Tablets", value: "990" },
+                  { icon: Gamepad2, label: "Consoles", value: "640" }
+                ].map(({ icon: Icon, label, value }) => (
+                  <div key={label} className="group rounded-xl bg-white/5 p-4 transition-colors hover:bg-white/10">
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <Icon size={16} className="transition-transform group-hover:scale-110" />
+                      <p className="text-sm">{label}</p>
+                    </div>
+                    <p className="mt-1 text-xl font-black">{value}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -185,17 +342,30 @@ function DeviceWizard({ onQuoteReady }) {
   }
 
   return (
-    <section id="wizard" className="bg-white py-20">
+    <section id="wizard" className="bg-gradient-to-b from-white to-slate-50 py-20">
       <div className="mx-auto max-w-7xl px-5">
         <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
-            <p className="font-black uppercase tracking-[0.18em] text-coral">Consumer Portal</p>
-            <h2 className="mt-2 text-4xl font-black tracking-normal text-ink">Device Submission Wizard</h2>
+            <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-coral/10 px-3 py-1 text-xs font-bold text-coral">
+              <Heart size={12} /> Consumer Portal
+            </div>
+            <h2 className="text-4xl font-black tracking-normal text-ink">Device Submission Wizard</h2>
+            <p className="mt-2 text-slate-500">Complete 4 simple steps to get your instant quote</p>
           </div>
           <StepTabs step={step} setStep={setStep} />
         </div>
+        <div className="mb-4 h-1.5 overflow-hidden rounded-full bg-slate-200">
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-lagoon to-mint transition-all duration-500"
+            style={{ width: `${(step / 4) * 100}%` }}
+          />
+        </div>
         <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 shadow-soft">
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-lg shadow-slate-200/30">
+            <div className="mb-5 flex items-center gap-2 text-sm font-semibold text-slate-400">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-xs">{step}</span>
+              <span className="text-slate-600">of 4 steps completed</span>
+            </div>
             {step === 1 && <CategoryStep category={category} setCategory={setCategory} />}
             {step === 2 && (
               <ModelStep
@@ -213,24 +383,27 @@ function DeviceWizard({ onQuoteReady }) {
               <ConditionStep conditions={conditions} toggleCondition={toggleCondition} quote={quote} />
             )}
             {step === 4 && <PhotoStep photos={photos} handleFiles={handleFiles} />}
-            <div className="mt-6 flex justify-between gap-3">
+            <div className="mt-8 flex justify-between gap-3 border-t border-slate-100 pt-6">
               <button
-                className="rounded-lg border border-slate-300 bg-white px-5 py-3 font-extrabold disabled:opacity-40"
+                className="rounded-xl border border-slate-200 bg-white px-5 py-3 font-extrabold text-slate-600 transition-all hover:border-slate-300 hover:bg-slate-50 disabled:opacity-40 disabled:hover:border-slate-200 disabled:hover:bg-white"
                 disabled={step === 1}
                 onClick={() => setStep((current) => current - 1)}
               >
-                Back
+                ← Back
               </button>
               {step < 4 ? (
                 <button
-                  className="rounded-lg bg-ink px-5 py-3 font-extrabold text-white"
+                  className="rounded-xl bg-gradient-to-r from-ink to-slate-800 px-6 py-3 font-extrabold text-white shadow-lg transition-all hover:shadow-xl hover:-translate-y-0.5"
                   onClick={() => setStep((current) => current + 1)}
                 >
-                  Continue
+                  Continue →
                 </button>
               ) : (
-                <button className="rounded-lg bg-lagoon px-5 py-3 font-extrabold text-white shadow-glow" onClick={finish}>
-                  Generate Quote
+                <button
+                  className="rounded-xl bg-gradient-to-r from-lagoon to-blue-600 px-6 py-3 font-extrabold text-white shadow-lg shadow-blue-500/25 transition-all hover:shadow-xl hover:shadow-blue-500/30 hover:-translate-y-0.5"
+                  onClick={finish}
+                >
+                  Generate Quote ⚡
                 </button>
               )}
             </div>
@@ -262,17 +435,32 @@ function useQuoteEstimate(category, model, conditions) {
 }
 
 function StepTabs({ step, setStep }) {
+  const labels = ["Category", "Model", "Condition", "Photos"];
   return (
-    <div className="grid grid-cols-4 rounded-lg bg-slate-100 p-1">
-      {[1, 2, 3, 4].map((item) => (
-        <button
-          key={item}
-          onClick={() => setStep(item)}
-          className={`h-10 min-w-12 rounded-md text-sm font-black ${step === item ? "bg-white text-lagoon shadow-sm" : "text-slate-500"}`}
-        >
-          {item}
-        </button>
-      ))}
+    <div className="grid grid-cols-4 rounded-xl bg-slate-100 p-1.5">
+      {labels.map((label, index) => {
+        const num = index + 1;
+        return (
+          <button
+            key={num}
+            onClick={() => setStep(num)}
+            className={`flex flex-col items-center gap-1 rounded-lg py-2.5 text-xs font-bold transition-all ${
+              step === num
+                ? "bg-white text-lagoon shadow-sm"
+                : "text-slate-400 hover:text-slate-600"
+            }`}
+          >
+            <span className={`flex h-6 w-6 items-center justify-center rounded-full text-[10px] ${
+              step === num
+                ? "bg-lagoon text-white"
+                : "bg-slate-200"
+            }`}>
+              {num}
+            </span>
+            <span className="hidden sm:inline">{label}</span>
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -464,48 +652,88 @@ function Breakdown({ label, value, dark = true }) {
 
 function UserDashboard() {
   const [sortBy, setSortBy] = useState("date");
-  const statusColor = { Pending: "bg-solar text-ink", Collected: "bg-blue-100 text-lagoon", Paid: "bg-emerald-100 text-emerald-700" };
+  const statusColor = {
+    Pending: "bg-solar/20 text-ink",
+    Collected: "bg-lagoon/20 text-lagoon",
+    Paid: "bg-emerald-100 text-emerald-700"
+  };
+  const statsWithIcons = [
+    { icon: WalletCards, gradient: "from-amber-400 to-orange-500" },
+    { icon: Smartphone, gradient: "from-lagoon to-blue-600" },
+    { icon: Leaf, gradient: "from-emerald-400 to-mint" },
+    { icon: Heart, gradient: "from-violetpop to-purple-600" }
+  ];
   const rows = [...submissions].sort((a, b) => (sortBy === "amount" ? b.amount.localeCompare(a.amount) : b.date.localeCompare(a.date)));
 
   return (
-    <section id="dashboard" className="bg-white py-20">
+    <section id="dashboard" className="bg-gradient-to-b from-slate-50 to-white py-20">
       <div className="mx-auto max-w-7xl px-5">
-        <p className="font-black uppercase tracking-[0.18em] text-violetpop">User Dashboard</p>
-        <h2 className="mt-2 text-4xl font-black tracking-normal">Your recovery impact</h2>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {dashboardStats.map((item) => (
-            <article key={item.label} className="rounded-lg border border-slate-200 bg-slate-50 p-5">
-              <p className="text-sm font-bold text-slate-500">{item.label}</p>
-              <p className="mt-3 text-3xl font-black">{item.value}</p>
-            </article>
-          ))}
+        <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-violetpop/10 px-3 py-1 text-xs font-bold text-violetpop">
+          <span>📊</span> User Dashboard
         </div>
-        <div className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="flex items-center justify-between gap-4 border-b border-slate-200 p-4">
-            <h3 className="font-black">Submissions</h3>
-            <select className="rounded-lg border border-slate-200 px-3 py-2 font-bold" value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
+        <h2 className="mt-2 text-4xl font-black tracking-normal text-ink">Your Recovery Impact</h2>
+        <p className="mt-2 text-slate-500">Track your e-waste recycling journey</p>
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {dashboardStats.map((item, index) => {
+            const { icon: Icon, gradient } = statsWithIcons[index];
+            return (
+              <article
+                key={item.label}
+                className="group card-hover relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm"
+              >
+                <div className={`absolute -right-8 -top-8 h-24 w-24 rounded-full bg-gradient-to-br ${gradient} opacity-10 transition-transform group-hover:scale-150`} />
+                <div className={`relative flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} text-white shadow-lg`}>
+                  <Icon size={22} />
+                </div>
+                <p className="relative mt-4 text-sm font-semibold text-slate-500">{item.label}</p>
+                <p className="relative mt-1 text-3xl font-black text-ink">{item.value}</p>
+              </article>
+            );
+          })}
+        </div>
+        <div className="mt-8 overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-lg shadow-slate-200/30">
+          <div className="flex items-center justify-between gap-4 border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+            <h3 className="text-lg font-black text-ink">Recent Submissions</h3>
+            <select
+              className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold transition-colors focus:border-lagoon focus:outline-none focus:ring-2 focus:ring-lagoon/20"
+              value={sortBy}
+              onChange={(event) => setSortBy(event.target.value)}
+            >
               <option value="date">Sort by date</option>
               <option value="amount">Sort by amount</option>
             </select>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[680px] text-left">
-              <thead className="bg-slate-50 text-sm text-slate-500">
+              <thead className="bg-slate-50 text-sm font-semibold text-slate-500">
                 <tr>
                   {["ID", "Device", "Date", "Amount", "Status"].map((head) => (
-                    <th key={head} className="px-4 py-3">{head}</th>
+                    <th key={head} className="px-6 py-4">{head}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {rows.map((row) => (
-                  <tr key={row.id} className="border-t border-slate-100">
-                    <td className="px-4 py-4 font-bold">{row.id}</td>
-                    <td className="px-4 py-4">{row.device}</td>
-                    <td className="px-4 py-4">{row.date}</td>
-                    <td className="px-4 py-4 font-bold">{row.amount}</td>
-                    <td className="px-4 py-4">
-                      <span className={`rounded-full px-3 py-1 text-xs font-black ${statusColor[row.status]}`}>{row.status}</span>
+                {rows.map((row, index) => (
+                  <tr
+                    key={row.id}
+                    className={`border-t border-slate-100 transition-colors hover:bg-slate-50 ${
+                      index % 2 === 0 ? "bg-white" : "bg-slate-50/30"
+                    }`}
+                  >
+                    <td className="px-6 py-4">
+                      <span className="font-mono font-bold text-slate-600">{row.id}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="font-semibold text-ink">{row.device}</span>
+                    </td>
+                    <td className="px-6 py-4 text-slate-600">{row.date}</td>
+                    <td className="px-6 py-4">
+                      <span className="font-bold text-ink">{row.amount}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex rounded-full px-3 py-1.5 text-xs font-bold ${statusColor[row.status]}`}>
+                        {row.status}
+                      </span>
                     </td>
                   </tr>
                 ))}
@@ -520,44 +748,119 @@ function UserDashboard() {
 
 function B2BCatalogue() {
   const [brand, setBrand] = useState("All");
-  const filtered = brand === "All" ? catalogueItems : catalogueItems.filter((item) => item.brand === brand);
+  const [typeFilter, setTypeFilter] = useState("All");
+  const filtered = catalogueItems.filter(
+    (item) => (brand === "All" || item.brand === brand) && (typeFilter === "All" || item.type === typeFilter)
+  );
 
   return (
-    <section id="catalogue" className="bg-slate-950 py-20 text-white">
-      <div className="mx-auto max-w-7xl px-5">
-        <p className="font-black uppercase tracking-[0.18em] text-limepop">B2B Portal</p>
+    <section id="catalogue" className="relative overflow-hidden bg-slate-950 py-20 text-white">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(25,211,162,0.05),_transparent_50%)]" />
+      <div className="relative mx-auto max-w-7xl px-5">
+        <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-limepop/10 px-3 py-1 text-xs font-bold text-limepop">
+          <PackageCheck size={12} /> B2B Portal
+        </div>
         <h2 className="mt-2 text-4xl font-black tracking-normal">Component Catalogue</h2>
+        <p className="mt-2 text-slate-400">Quality-tested parts for repair businesses</p>
         <div className="mt-8 grid gap-6 lg:grid-cols-[280px_1fr]">
-          <aside className="rounded-2xl bg-white p-5 text-ink">
-            <h3 className="font-black">Filters</h3>
-            {["Device type", "Brand", "Component", "Grade", "Price range"].map((label) => (
-              <label key={label} className="mt-4 block">
-                <span className="text-sm font-extrabold text-slate-500">{label}</span>
-                {label === "Brand" ? (
-                  <select className="mt-2 h-11 w-full rounded-lg border border-slate-200 px-3 font-bold" value={brand} onChange={(event) => setBrand(event.target.value)}>
-                    {["All", "Apple", "Dell", "Samsung", "Sony"].map((item) => <option key={item}>{item}</option>)}
-                  </select>
-                ) : (
-                  <div className="mt-2 h-11 rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm font-bold text-slate-400">Showcase filter</div>
-                )}
-              </label>
-            ))}
+          <aside className="space-y-6 rounded-2xl bg-white/5 p-6 backdrop-blur-sm">
+            <h3 className="flex items-center gap-2 font-black text-white">
+              <Search size={18} /> Filters
+            </h3>
+            <div className="space-y-5">
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-slate-400">Device Type</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {["All", "Phone", "Laptop", "Tablet"].map((type) => (
+                    <button
+                      key={type}
+                      onClick={() => setTypeFilter(type)}
+                      className={`rounded-lg px-3 py-2 text-sm font-semibold transition-all ${
+                        typeFilter === type
+                          ? "bg-limepop text-ink"
+                          : "bg-white/10 text-slate-300 hover:bg-white/20"
+                      }`}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-slate-400">Brand</label>
+                <select
+                  className="w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-colors focus:border-limepop focus:outline-none focus:ring-2 focus:ring-limepop/20"
+                  value={brand}
+                  onChange={(event) => setBrand(event.target.value)}
+                >
+                  {["All", "Apple", "Dell", "Samsung", "Sony"].map((item) => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-slate-400">Grade</label>
+                <div className="flex gap-2">
+                  {["A", "B", "C"].map((grade) => (
+                    <button
+                      key={grade}
+                      className="flex-1 rounded-lg border border-white/20 bg-white/5 py-2 text-sm font-semibold text-slate-400 transition-colors hover:bg-white/10"
+                    >
+                      Grade {grade}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-slate-400">Price Range</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    placeholder="Min"
+                    className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm font-semibold text-white placeholder:text-slate-500 backdrop-blur-sm"
+                  />
+                  <span className="text-slate-500">-</span>
+                  <input
+                    type="number"
+                    placeholder="Max"
+                    className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm font-semibold text-white placeholder:text-slate-500 backdrop-blur-sm"
+                  />
+                </div>
+              </div>
+            </div>
+            <button className="w-full rounded-xl bg-gradient-to-r from-mint to-emerald-500 py-3 font-bold text-ink transition-all hover:shadow-lg hover:shadow-mint/30">
+              Apply Filters
+            </button>
           </aside>
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {filtered.map((item) => (
-              <article key={item.id} className="overflow-hidden rounded-lg bg-white text-ink shadow-soft">
-                <img src={item.image} alt={item.component} className="h-44 w-full object-cover" />
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {filtered.map((item, index) => (
+              <article
+                key={item.id}
+                className="group card-hover overflow-hidden rounded-2xl bg-white text-ink shadow-lg shadow-black/20 transition-all hover:shadow-xl hover:shadow-black/30"
+                style={{ animationDelay: `${index * 50}ms` }}
+              >
+                <div className="relative overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.component}
+                    className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <span className="absolute bottom-3 left-3 rounded-full bg-limepop px-3 py-1 text-xs font-black">
+                    Grade {item.grade}
+                  </span>
+                </div>
                 <div className="p-4">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-xs font-black text-slate-500">{item.id}</p>
-                    <span className="rounded-full bg-limepop px-3 py-1 text-xs font-black">Grade {item.grade}</span>
-                  </div>
-                  <h3 className="mt-3 text-lg font-black">{item.brand} {item.component}</h3>
-                  <p className="mt-1 text-sm font-semibold text-slate-500">{item.type} component</p>
+                  <p className="text-xs font-bold text-slate-400">{item.id}</p>
+                  <h3 className="mt-1 text-lg font-black">{item.brand}</h3>
+                  <p className="text-sm font-semibold text-slate-500">{item.component}</p>
+                  <p className="text-xs text-slate-400">{item.type} • {item.condition}</p>
                   <div className="mt-4 flex items-center justify-between gap-3">
-                    <strong className="text-xl">{money.format(item.price)}</strong>
-                    <button className="rounded-lg bg-ink px-4 py-2 text-sm font-black text-white">
-                      Add to Order
+                    <strong className="text-xl text-ink">{money.format(item.price)}</strong>
+                    <button className="rounded-xl bg-ink px-4 py-2.5 text-sm font-bold text-white transition-all hover:bg-slate-800 active:scale-95">
+                      Add +
                     </button>
                   </div>
                 </div>

@@ -14,10 +14,7 @@ body {
   margin: 0;
   min-width: 320px;
   color: #101828;
-  background:
-    radial-gradient(circle at 12% 10%, rgba(25, 211, 162, 0.18), transparent 30%),
-    radial-gradient(circle at 92% 4%, rgba(255, 200, 87, 0.2), transparent 30%),
-    linear-gradient(180deg, #f7fbff 0%, #ffffff 42%, #f8fafc 100%);
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 50%, #f0fdf4 100%);
   font-family:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
@@ -29,6 +26,7 @@ select {
   font: inherit;
 }
 
+/* Animations */
 @keyframes countPulse {
   0%,
   100% {
@@ -39,6 +37,80 @@ select {
   }
 }
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
 .counter-pulse {
   animation: countPulse 2.8s ease-in-out infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.6s ease-out forwards;
+}
+
+.animate-slide-up:nth-child(1) { animation-delay: 0.1s; }
+.animate-slide-up:nth-child(2) { animation-delay: 0.2s; }
+.animate-slide-up:nth-child(3) { animation-delay: 0.3s; }
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(16, 24, 40, 0.15);
+}
+
+/* Button press effect */
+.btn-press:active {
+  transform: scale(0.98);
+}
+
+/* Focus states */
+input:focus,
+select:focus,
+button:focus-visible {
+  outline: 2px solid #1580ff;
+  outline-offset: 2px;
+}
+
+/* Smooth transitions */
+.transition-smooth {
+  transition: all 0.2s ease;
 }
