@@ -1,4 +1,4 @@
 /.claude
-/npm-cache
+/.npm-cache
 /dist
 /node_modules
