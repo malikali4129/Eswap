@@ -48,7 +48,7 @@ export const submissions = [
 export const catalogueItems = [
   {
     id: "CMP-8801",
-    image: "https://images.unsplash.com/photo-1601737487795-dab272f52420?auto=format&fit=crop&w=600&q=80",
+    image: "https://mobiletrade.pk/wp-content/uploads/2023/10/1-55.jpg",
     type: "Phone",
     brand: "Apple",
     component: "OLED Display",
@@ -57,7 +57,7 @@ export const catalogueItems = [
   },
   {
     id: "CMP-7712",
-    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80",
+    image: "https://snpi.dell.com/snp/images/products/large/en-sg~CPA-VG93V/CPA-VG93V.jpg",
     type: "Laptop",
     brand: "Dell",
     component: "Motherboard",
@@ -66,7 +66,7 @@ export const catalogueItems = [
   },
   {
     id: "CMP-5510",
-    image: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=600&q=80",
+    image: "https://static-01.daraz.pk/p/1da732f487c72825dd6dc89ff4354073.jpg",
     type: "Tablet",
     brand: "Samsung",
     component: "Battery Pack",
@@ -75,7 +75,7 @@ export const catalogueItems = [
   },
   {
     id: "CMP-3388",
-    image: "https://images.unsplash.com/photo-1607853202273-797f1c22a38e?auto=format&fit=crop&w=600&q=80",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFgPbljUC1thkyZBhO92iAwH8Oz5bF44c8WJJLAF6eOw5D4LJLACetQ6cy&s=10",
     type: "Console",
     brand: "Sony",
     component: "Cooling Fan",
