@@ -601,6 +601,17 @@ function QuotePreview({ category, model, quote }) {
 }
 
 function InstantQuote({ quote }) {
+  const [showPickup, setShowPickup] = useState(false);
+  const [pickupData, setPickupData] = useState({
+    name: "",
+    phone: "",
+    address: "",
+    city: "Lahore",
+    date: "",
+    time: "morning",
+    notes: ""
+  });
+
   const display = quote ?? {
     amount: 23500,
     componentValue: 18330,
@@ -609,6 +620,21 @@ function InstantQuote({ quote }) {
     model: "iPhone 13 Pro",
     brand: "Apple"
   };
+
+  const timeSlots = [
+    { id: "morning", label: "Morning (9 AM - 12 PM)", icon: "🌅" },
+    { id: "afternoon", label: "Afternoon (12 PM - 4 PM)", icon: "☀️" },
+    { id: "evening", label: "Evening (4 PM - 7 PM)", icon: "🌆" }
+  ];
+
+  const cities = ["Lahore", "Karachi", "Islamabad", "Faisalabad", "Rawalpindi", "Multan", "Peshawar", "Quetta"];
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert(`Pickup scheduled!\n\nName: ${pickupData.name}\nPhone: ${pickupData.phone}\nAddress: ${pickupData.address}, ${pickupData.city}\nDate: ${pickupData.date}\nTime: ${pickupData.time}`);
+    setShowPickup(false);
+  };
+
   return (
     <section id="quote" className="bg-[#f6fff9] py-20">
       <div className="mx-auto grid max-w-6xl gap-6 px-5 lg:grid-cols-[1fr_0.8fr]">
@@ -617,10 +643,10 @@ function InstantQuote({ quote }) {
           <h2 className="mt-3 text-5xl font-black tracking-normal text-ink">{money.format(display.amount)}</h2>
           <p className="mt-4 text-lg font-semibold text-slate-600">Offer for {display.brand} {display.model}</p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <button className="rounded-lg bg-mint px-6 py-4 font-black text-ink shadow-soft">
+            <button onClick={() => setShowPickup(true)} className="rounded-lg bg-mint px-6 py-4 font-black text-ink shadow-soft hover:bg-mint/90 transition-colors">
               Accept & Schedule Pickup
             </button>
-            <button className="rounded-lg border border-slate-300 bg-white px-6 py-4 font-black text-ink">
+            <button className="rounded-lg border border-slate-300 bg-white px-6 py-4 font-black text-ink hover:bg-slate-50 transition-colors">
               Decline
             </button>
           </div>
@@ -637,6 +663,183 @@ function InstantQuote({ quote }) {
           </div>
         </div>
       </div>
+
+      {/* Pickup Scheduling Modal */}
+      {showPickup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="animate-slide-up mx-4 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-2xl">
+            {/* Modal Header */}
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white px-6 py-5">
+              <div>
+                <div className="flex items-center gap-2 text-sm font-bold text-emerald-600">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-xs">✓</span>
+                  Quote Accepted
+                </div>
+                <h3 className="mt-1 text-2xl font-black text-ink">Schedule Pickup</h3>
+              </div>
+              <button onClick={() => setShowPickup(false)} className="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600">
+                ✕
+              </button>
+            </div>
+
+            {/* Device Summary Card */}
+            <div className="mx-6 mt-5 rounded-xl bg-gradient-to-r from-ink to-slate-800 p-5 text-white">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Item</p>
+                  <p className="mt-1 text-lg font-black">{display.brand} {display.model}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Offer</p>
+                  <p className="mt-1 text-2xl font-black text-limepop">{money.format(display.amount)}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="p-6">
+              <div className="space-y-5">
+                {/* Contact Section */}
+                <div>
+                  <h4 className="mb-4 flex items-center gap-2 text-sm font-black uppercase tracking-wide text-slate-400">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-xs text-slate-600">1</span>
+                    Contact Details
+                  </h4>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <label className="block">
+                      <span className="text-sm font-bold text-slate-600">Full Name</span>
+                      <input
+                        required
+                        type="text"
+                        className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 font-semibold text-ink transition-colors focus:border-lagoon focus:bg-white focus:outline-none focus:ring-2 focus:ring-lagoon/20"
+                        placeholder="Your name"
+                        value={pickupData.name}
+                        onChange={(e) => setPickupData({ ...pickupData, name: e.target.value })}
+                      />
+                    </label>
+                    <label className="block">
+                      <span className="text-sm font-bold text-slate-600">Phone Number</span>
+                      <input
+                        required
+                        type="tel"
+                        className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 font-semibold text-ink transition-colors focus:border-lagoon focus:bg-white focus:outline-none focus:ring-2 focus:ring-lagoon/20"
+                        placeholder="03XX XXXXXXX"
+                        value={pickupData.phone}
+                        onChange={(e) => setPickupData({ ...pickupData, phone: e.target.value })}
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                {/* Address Section */}
+                <div>
+                  <h4 className="mb-4 flex items-center gap-2 text-sm font-black uppercase tracking-wide text-slate-400">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-xs text-slate-600">2</span>
+                    Pickup Address
+                  </h4>
+                  <div className="space-y-4">
+                    <label className="block">
+                      <span className="text-sm font-bold text-slate-600">Complete Address</span>
+                      <textarea
+                        required
+                        rows={2}
+                        className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 font-semibold text-ink transition-colors focus:border-lagoon focus:bg-white focus:outline-none focus:ring-2 focus:ring-lagoon/20"
+                        placeholder="House No., Street, Area..."
+                        value={pickupData.address}
+                        onChange={(e) => setPickupData({ ...pickupData, address: e.target.value })}
+                      />
+                    </label>
+                    <label className="block">
+                      <span className="text-sm font-bold text-slate-600">City</span>
+                      <select
+                        className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 font-semibold text-ink transition-colors focus:border-lagoon focus:bg-white focus:outline-none focus:ring-2 focus:ring-lagoon/20"
+                        value={pickupData.city}
+                        onChange={(e) => setPickupData({ ...pickupData, city: e.target.value })}
+                      >
+                        {cities.map((city) => (
+                          <option key={city} value={city}>{city}</option>
+                        ))}
+                      </select>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Schedule Section */}
+                <div>
+                  <h4 className="mb-4 flex items-center gap-2 text-sm font-black uppercase tracking-wide text-slate-400">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-xs text-slate-600">3</span>
+                    Preferred Time
+                  </h4>
+                  <div className="space-y-4">
+                    <label className="block">
+                      <span className="text-sm font-bold text-slate-600">Pickup Date</span>
+                      <input
+                        required
+                        type="date"
+                        className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 font-semibold text-ink transition-colors focus:border-lagoon focus:bg-white focus:outline-none focus:ring-2 focus:ring-lagoon/20"
+                        min={new Date().toISOString().split("T")[0]}
+                        value={pickupData.date}
+                        onChange={(e) => setPickupData({ ...pickupData, date: e.target.value })}
+                      />
+                    </label>
+                    <div>
+                      <span className="mb-2 block text-sm font-bold text-slate-600">Preferred Time Slot</span>
+                      <div className="grid gap-3 sm:grid-cols-3">
+                        {timeSlots.map((slot) => (
+                          <button
+                            key={slot.id}
+                            type="button"
+                            onClick={() => setPickupData({ ...pickupData, time: slot.id })}
+                            className={`flex items-center gap-2 rounded-xl border-2 px-4 py-3 font-bold transition-all ${
+                              pickupData.time === slot.id
+                                ? "border-lagoon bg-blue-50 text-lagoon"
+                                : "border-slate-200 text-slate-600 hover:border-slate-300"
+                            }`}
+                          >
+                            <span>{slot.icon}</span>
+                            <span className="text-sm">{slot.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Notes */}
+                <div>
+                  <label className="block">
+                    <span className="text-sm font-bold text-slate-600">Additional Notes (Optional)</span>
+                    <textarea
+                      rows={2}
+                      className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 font-semibold text-ink transition-colors focus:border-lagoon focus:bg-white focus:outline-none focus:ring-2 focus:ring-lagoon/20"
+                      placeholder="Any special instructions for pickup..."
+                      value={pickupData.notes}
+                      onChange={(e) => setPickupData({ ...pickupData, notes: e.target.value })}
+                    />
+                  </label>
+                </div>
+              </div>
+
+              {/* Submit Actions */}
+              <div className="mt-6 flex flex-col gap-3 border-t border-slate-100 pt-6 sm:flex-row">
+                <button
+                  type="submit"
+                  className="flex-1 rounded-xl bg-gradient-to-r from-mint to-emerald-500 px-6 py-4 font-black text-ink shadow-lg shadow-emerald-500/25 transition-all hover:shadow-xl hover:shadow-emerald-500/30 hover:-translate-y-0.5"
+                >
+                  ✓ Confirm Pickup
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowPickup(false)}
+                  className="rounded-xl border border-slate-200 bg-white px-6 py-4 font-bold text-slate-600 transition-colors hover:bg-slate-50"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

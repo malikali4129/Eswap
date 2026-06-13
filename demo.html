@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eswap - Device Sell Process</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink: #0f172a; --lagoon: #15b8ff; --mint: #25d9a2; --limepop: #a3e635; --emerald-600: #059669; --coral: #f97066; --violetpop: #8b5cf6; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Inter, sans-serif; background: linear-gradient(180deg, #f8fafc 0%, #fff 50%, #f0fdf4 100%); color: var(--ink); min-height: 100vh; }
+    .container { max-width: 520px; margin: 0 auto; min-height: 100vh; padding: 20px; display: flex; flex-direction: column; }
+    .header { text-align: center; padding: 12px 0 24px; }
+    .logo { display: inline-flex; align-items: center; gap: 8px; font-weight: 900; font-size: 22px; text-decoration: none; color: var(--ink); }
+    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--ink), #1e293b); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--limepop); font-size: 18px; }
+    .progress { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 24px; }
+    .progress-step { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #94a3b8; }
+    .progress-step.active { color: var(--lagoon); }
+    .progress-step.completed { color: var(--mint); }
+    .progress-dot { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; background: #f1f5f9; color: #94a3b8; }
+    .progress-step.active .progress-dot { background: var(--lagoon); color: white; }
+    .progress-step.completed .progress-dot { background: var(--mint); color: var(--ink); }
+    .progress-line { width: 24px; height: 2px; background: #e2e8f0; }
+    .progress-line.completed { background: var(--mint); }
+    .card { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 4px 20px rgba(15,23,42,0.06); flex: 1; display: flex; flex-direction: column; }
+    .step { display: none; flex-direction: column; flex: 1; }
+    .step.active { display: flex; }
+    .step-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .step-subtitle { color: #64748b; font-size: 14px; margin-bottom: 20px; }
+    .step-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--coral); margin-bottom: 4px; }
+    .btn-group { display: flex; gap: 10px; margin-top: auto; padding-top: 20px; }
+    .btn { flex: 1; padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: none; font-family: inherit; }
+    .btn-primary { background: linear-gradient(135deg, var(--mint), var(--emerald-600)); color: var(--ink); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,217,162,0.35); }
+    .btn-secondary { background: white; border: 1.5px solid #e2e8f0; color: var(--ink); }
+    .btn-secondary:hover { background: #f8fafc; }
+    .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .category-btn { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px; border: 1.5px solid #e2e8f0; border-radius: 14px; background: white; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+    .category-btn:hover { border-color: var(--mint); }
+    .category-btn.selected { border-color: var(--lagoon); background: rgba(21,184,255,0.08); }
+    .category-icon { width: 44px; height: 44px; border-radius: 12px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+    .category-btn.selected .category-icon { background: var(--lagoon); }
+    .category-name { font-size: 15px; font-weight: 700; }
+    .category-weight { font-size: 12px; color: #94a3b8; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px; }
+    .form-input, .form-select { width: 100%; padding: 12px 14px; border: 1.5px solid #e2e8f0; border-radius: 12px; font-size: 14px; font-weight: 600; background: #f8fafc; font-family: inherit; }
+    .form-input:focus, .form-select:focus { outline: none; border-color: var(--lagoon); background: white; }
+    .condition-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .condition-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1.5px solid #e2e8f0; border-radius: 12px; background: white; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+    .condition-item:hover { border-color: #cbd5e1; }
+    .condition-item.selected { border-color: var(--lagoon); background: rgba(21,184,255,0.06); }
+    .condition-check { width: 20px; height: 20px; border-radius: 6px; border: 2px solid #cbd5e1; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+    .condition-item.selected .condition-check { background: var(--lagoon); border-color: var(--lagoon); color: white; }
+    .condition-text { font-size: 14px; font-weight: 600; }
+    .price-card { background: linear-gradient(135deg, var(--ink), #1e293b); border-radius: 16px; padding: 20px; color: white; margin-bottom: 16px; }
+    .price-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--limepop); }
+    .price-amount { font-size: 32px; font-weight: 800; margin: 6px 0; }
+    .price-device { font-size: 13px; color: #94a3b8; }
+    .breakdown-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e2e8f0; font-size: 13px; }
+    .breakdown-row:last-child { border: none; }
+    .breakdown-label { color: #64748b; }
+    .breakdown-value { font-weight: 700; }
+    .time-slots { display: grid; gap: 8px; }
+    .time-slot { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: 2px solid #e2e8f0; border-radius: 12px; background: white; cursor: pointer; transition: all 0.2s; font-family: inherit; font-size: 13px; font-weight: 600; color: #475569; }
+    .time-slot:hover { border-color: #cbd5e1; }
+    .time-slot.selected { border-color: var(--lagoon); background: rgba(21,184,255,0.08); color: var(--lagoon); }
+    .success-screen { text-align: center; padding: 20px 0; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+    .success-icon { width: 64px; height: 64px; background: linear-gradient(135deg, var(--mint), var(--emerald-600)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 28px; }
+    .success-title { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+    .success-msg { color: #64748b; font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
+    .success-details { background: #f8fafc; border-radius: 14px; padding: 16px; text-align: left; margin-bottom: 16px; }
+
+    /* Receipt Animation */
+    @keyframes slideDown { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes unfoldDown { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes blink { 0%, 50%, 100% { opacity: 1; } 25%, 75% { opacity: 0.3; } }
+
+    .printing-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; padding: 20px; }
+    .printer { width: 200px; height: 80px; background: linear-gradient(180deg, #374151, #1f2937); border-radius: 12px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .printer-slot { width: 120px; height: 8px; background: #0f172a; border-radius: 4px; }
+    .printer-paper { position: absolute; bottom: 10px; width: 140px; height: 100px; background: white; border-radius: 4px; transform: translateY(100px); opacity: 0; }
+    .printer-paper.printing { animation: slideDown 0.8s ease-out forwards; }
+    .print-status { margin-top: 16px; font-size: 14px; font-weight: 600; color: #64748b; }
+    .print-status.processing { color: var(--lagoon); animation: blink 1s ease-in-out infinite; }
+    .print-status.done { color: var(--mint); }
+
+    /* New Receipt Animation Styles */
+    .receipt__holder { display: flex; align-items: center; justify-content: center; min-height: 300px; padding: 20px; }
+    .receipt__paper { width: 100%; max-width: 320px; background: white; border-radius: 16px; padding: 24px; box-shadow: 0 8px 32px rgba(15,23,42,0.12); animation: slideDown 1.5s ease forwards; opacity: 0; }
+    .receipt__header { text-align: center; border-bottom: 2px dashed #e2e8f0; padding-bottom: 16px; margin-bottom: 16px; }
+    .receipt__logo { font-weight: 900; font-size: 20px; color: var(--ink); display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .receipt__logo-icon { width: 28px; height: 28px; background: linear-gradient(135deg, var(--ink), #1e293b); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--limepop); font-size: 14px; }
+    .receipt__id { font-size: 11px; color: #64748b; margin-top: 6px; font-family: monospace; letter-spacing: 0.05em; }
+    .receipt__block { padding: 12px 0; border-bottom: 1px dotted #e2e8f0; }
+    .receipt__block:last-of-type { border-bottom: none; }
+    .receipt__row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 13px; }
+    .receipt__label { color: #64748b; font-weight: 500; }
+    .receipt__value { font-weight: 700; color: var(--ink); }
+    .receipt__amount { font-size: 24px; font-weight: 800; color: var(--mint); }
+    .receipt__actions { display: flex; gap: 10px; margin-top: 20px; animation: unfoldDown 1s ease 1s forwards; opacity: 0; }
+    .receipt__btn { flex: 1; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: none; font-family: inherit; }
+    .receipt__btn--primary { background: linear-gradient(135deg, var(--mint), var(--emerald-600)); color: var(--ink); }
+    .receipt__btn--primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,217,162,0.35); }
+    .receipt__btn--secondary { background: white; border: 1.5px solid #e2e8f0; color: var(--ink); }
+    .receipt__btn--secondary:hover { background: #f8fafc; border-color: #cbd5e1; }
+    .receipt__status { text-align: center; font-size: 11px; color: var(--mint); margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <a href="#" class="logo"><span class="logo-icon">↻</span>Eswap</a>
+    </header>
+    <div class="progress" id="progress"></div>
+    <div class="card">
+      <div class="step active" data-step="1">
+        <p class="step-label">Step 1 of 4</p>
+        <h2 class="step-title">What do you have?</h2>
+        <p class="step-subtitle">Select your device category</p>
+        <div class="category-grid" id="categoryGrid"></div>
+        <div class="btn-group"><button class="btn btn-primary" onclick="nextStep()">Continue →</button></div>
+      </div>
+
+      <div class="step" data-step="2">
+        <p class="step-label">Step 2 of 4</p>
+        <h2 class="step-title">Brand & Model</h2>
+        <p class="step-subtitle">Tell us more about your device</p>
+        <div class="form-group">
+          <label class="form-label">Brand</label>
+          <select class="form-select" id="brandSelect" onchange="updateModels()"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Model</label>
+          <select class="form-select" id="modelSelect"></select>
+        </div>
+        <div class="btn-group"><button class="btn btn-secondary" onclick="prevStep()">← Back</button><button class="btn btn-primary" onclick="nextStep()">Continue →</button></div>
+      </div>
+
+      <div class="step" data-step="3">
+        <p class="step-label">Step 3 of 4</p>
+        <h2 class="step-title">Condition</h2>
+        <p class="step-subtitle">Check what applies to your device</p>
+        <div class="condition-list" id="conditionList"></div>
+        <div class="price-card">
+          <p class="price-label">Live Price Estimate</p>
+          <p class="price-amount" id="livePrice">₨ 0</p>
+        </div>
+        <div class="btn-group"><button class="btn btn-secondary" onclick="prevStep()">← Back</button><button class="btn btn-primary" onclick="nextStep()">Get Quote →</button></div>
+      </div>
+
+      <div class="step" data-step="4">
+        <p class="step-label">Step 4 of 4</p>
+        <h2 class="step-title">Your Quote</h2>
+        <p class="step-subtitle">Accept offer and schedule pickup</p>
+        <div class="price-card">
+          <p class="price-label">Your Offer</p>
+          <p class="price-amount" id="quoteAmount">₨ 23,500</p>
+          <p class="price-device" id="quoteDevice">iPhone 13 Pro</p>
+        </div>
+        <div class="breakdown-row"><span class="breakdown-label">Component Value</span><span class="breakdown-value" id="compValue">₨ 18,330</span></div>
+        <div class="breakdown-row"><span class="breakdown-label">Scrap Value</span><span class="breakdown-value" id="scrapValue">₨ 5,170</span></div>
+        <div class="breakdown-row"><span class="breakdown-label">E-Waste Diverted</span><span class="breakdown-value" id="ewasteVal">0.42 kg</span></div>
+        <div class="btn-group"><button class="btn btn-primary" onclick="nextStep()">Accept & Schedule →</button></div>
+      </div>
+
+      <div class="step" data-step="5">
+        <p class="step-label">Pickup Details</p>
+        <h2 class="step-title">Schedule Pickup</h2>
+        <p class="step-subtitle">Where should we pick up?</p>
+        <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="pickName" placeholder="Your name"></div>
+        <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="pickPhone" placeholder="03XX XXXXXXX"></div>
+        <div class="form-group"><label class="form-label">Address</label><textarea class="form-input" id="pickAddress" placeholder="House, Street, Area" style="min-height:60px"></textarea></div>
+        <div class="form-group"><label class="form-label">City</label>
+          <select class="form-select" id="pickCity">
+            <option>Lahore</option>
+            <option>Karachi</option>
+            <option>Islamabad</option>
+            <option>Rawalpindi</option>
+            <option>Faisalabad</option>
+            <option>Multan</option>
+            <option>Peshawar</option>
+            <option>Quetta</option>
+          </select>
+        </div>
+        <div class="btn-group"><button class="btn btn-secondary" onclick="prevStep()">← Back</button><button class="btn btn-primary" onclick="nextStep()">Continue →</button></div>
+      </div>
+
+      <div class="step" data-step="6">
+        <p class="step-label">Final Step</p>
+        <h2 class="step-title">Pickup Time</h2>
+        <p class="step-subtitle">Choose convenient date & time</p>
+        <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="pickDate"></div>
+        <div class="form-group"><label class="form-label">Time Slot</label>
+          <div class="time-slots">
+            <button type="button" class="time-slot selected" onclick="selectTime(this)">🌅 Morning (9 AM - 12 PM)</button>
+            <button type="button" class="time-slot" onclick="selectTime(this)">☀️ Afternoon (12 PM - 4 PM)</button>
+            <button type="button" class="time-slot" onclick="selectTime(this)">🌆 Evening (4 PM - 7 PM)</button>
+          </div>
+        </div>
+        <div class="btn-group"><button class="btn btn-secondary" onclick="prevStep()">← Back</button><button class="btn btn-primary" onclick="startPrinting()">✓ Confirm Pickup</button></div>
+      </div>
+
+      <div class="step" data-step="printing">
+        <div class="printing-screen">
+          <div class="printer">
+            <div class="printer-slot"></div>
+            <div class="printer-paper" id="printPaper"></div>
+          </div>
+          <p class="print-status processing" id="printStatus">Processing Transaction...</p>
+        </div>
+      </div>
+
+      <div class="step" data-step="success">
+        <div class="success-screen">
+          <div class="success-icon">✓</div>
+          <h2 class="success-title">Pickup Scheduled!</h2>
+          <p class="success-msg">Transaction complete. Your receipt is ready.</p>
+
+          <div class="receipt__holder">
+            <div class="receipt__paper" id="receipt">
+              <div class="receipt__header">
+                <div class="receipt__logo">
+                  <span class="receipt__logo-icon">↻</span>
+                  Eswap
+                </div>
+                <div class="receipt__id">Tracking: <span id="trackingId">ESW-XXXXXXXX</span></div>
+              </div>
+              <div class="receipt__block">
+                <div class="receipt__row"><span class="receipt__label">Device</span><span class="receipt__value" id="recDevice">-</span></div>
+                <div class="receipt__row"><span class="receipt__label">Condition</span><span class="receipt__value" id="recCondition">Working</span></div>
+              </div>
+              <div class="receipt__block">
+                <div class="receipt__row"><span class="receipt__label">Offer Amount</span><span class="receipt__amount" id="recAmount">₨ 0</span></div>
+              </div>
+              <div class="receipt__block">
+                <div class="receipt__row"><span class="receipt__label">Name</span><span class="receipt__value" id="recName">-</span></div>
+                <div class="receipt__row"><span class="receipt__label">Phone</span><span class="receipt__value" id="recPhone">-</span></div>
+                <div class="receipt__row"><span class="receipt__label">Address</span><span class="receipt__value" id="recAddress">-</span></div>
+                <div class="receipt__row"><span class="receipt__label">Date</span><span class="receipt__value" id="recDate">-</span></div>
+                <div class="receipt__row"><span class="receipt__label">Time</span><span class="receipt__value" id="recTime">-</span></div>
+              </div>
+              <div class="receipt__status">SMS confirmation sent to your phone</div>
+              <div class="receipt__actions">
+                <button class="receipt__btn receipt__btn--secondary">📧 Email</button>
+                <button class="receipt__btn receipt__btn--primary" onclick="location.reload()">✓ Done</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const categories = [
+      {id:'phone',name:'Smartphone',icon:'📱',weight:'~0.2 kg'},
+      {id:'laptop',name:'Laptop',icon:'💻',weight:'~2.5 kg'},
+      {id:'tablet',name:'Tablet',icon:'📲',weight:'~0.5 kg'},
+      {id:'console',name:'Console',icon:'🎮',weight:'~3.5 kg'}
+    ];
+
+    // Brands per category
+    const brandsByCategory = {
+      phone: {
+        Apple:{models:['iPhone 14 Pro','iPhone 13 Pro','iPhone 13','iPhone 12 Pro','iPhone 12','iPhone 11 Pro','iPhone 11','iPhone SE']},
+        Samsung:{models:['Galaxy S23 Ultra','Galaxy S22+','Galaxy S21','Galaxy S20','Galaxy A54','Galaxy A34','Galaxy Note 20']},
+        Xiaomi:{models:['Mi 13','Mi 12','Redmi Note 12','Redmi Note 11','POCO F4']},
+        Oppo:{models:['Find X5 Pro','Find X5','Reno 8','Reno 7','A77']},
+        Vivo:{models:['X80 Pro','X70 Pro','V25 Pro','Y22s','Y35']}
+      },
+      laptop: {
+        Apple:{models:['MacBook Pro 14"','MacBook Pro 16"','MacBook Air M2','MacBook Air M1','MacBook Pro 13"']},
+        Dell:{models:['XPS 15','XPS 13','Latitude 5520','Inspiron 15','G5 15']},
+        HP:{models:['Spectre x360','EliteBook 840','Pavilion 15','Omen 15','Envy 13']},
+        Lenovo:{models:['ThinkPad X1 Carbon','ThinkPad T14','Legion 5','Yoga 9i','IdeaPad 5']},
+        Asus:{models:['ZenBook Pro','ROG Strix','VivoBook','TUF Gaming','ExpertBook']}
+      },
+      tablet: {
+        Apple:{models:['iPad Pro 12.9"','iPad Pro 11"','iPad Air','iPad 10th Gen','iPad Mini']},
+        Samsung:{models:['Galaxy Tab S8 Ultra','Galaxy Tab S8+','Galaxy Tab S8','Galaxy Tab A8','Galaxy Tab Active']},
+        Lenovo:{models:['Tab P12 Pro','Tab P11 Plus','Tab M10 Plus','Tab M9']},
+        Xiaomi:{models:['Pad 5 Pro','Pad 5','Redmi Pad']}
+      },
+      console: {
+        Sony:{models:['PS5','PS4 Pro','PS4 Slim']},
+        Microsoft:{models:['Xbox Series X','Xbox Series S','Xbox One X']},
+        Nintendo:{models:['Switch OLED','Switch Lite','Switch']}
+      }
+    };
+
+    const conditions = [
+      {id:'screenCracked',text:'Screen cracked/damaged',impact:-0.15},
+      {id:'batteryBad',text:'Battery not holding charge',impact:-0.12},
+      {id:'waterDamage',text:'Water damage',impact:-0.2},
+      {id:'touchBroken',text:'Touch not working',impact:-0.15},
+      {id:'cameraDead',text:'Camera not working',impact:-0.08},
+      {id:'chargingPort',text:'Charging port damaged',impact:-0.1},
+      {id:'speakerGone',text:'Speaker/mic not working',impact:-0.08},
+      {id:'backBroken',text:'Back panel broken/missing',impact:-0.05}
+    ];
+    const basePrices = {phone:12500,laptop:32000,tablet:15500,console:21000};
+    let state = {category:null,brand:'Apple',model:null,conditions:[],step:1};
+    let selectedTime = 'Morning';
+    let finalPrice = 0;
+    let trackingNumber = '';
+
+    function init() {
+      renderCategoryGrid();
+      renderBrandSelect();
+      renderConditions();
+      renderProgress();
+      document.getElementById('pickDate').min = new Date().toISOString().split('T')[0];
+    }
+
+    function renderProgress() {
+      const steps = ['Category','Model','Condition','Quote','Contact','Schedule','Done'];
+      let html = '';
+      steps.forEach((s,i) => {
+        let cls = i < state.step ? 'completed' : i+1 === state.step ? 'active' : '';
+        html += `<div class="progress-step ${cls}"><span class="progress-dot">${i < state.step ? '✓' : i+1}</span></div>`;
+        if(i < steps.length-1) html += `<div class="progress-line ${i < state.step ? 'completed' : ''}"></div>`;
+      });
+      document.getElementById('progress').innerHTML = html;
+    }
+
+    function renderCategoryGrid() {
+      let html = '';
+      categories.forEach(c => {
+        let cls = state.category === c.id ? 'selected' : '';
+        html += `<button class="category-btn ${cls}" onclick="selectCategory('${c.id}')"><span class="category-icon">${c.icon}</span><span class="category-name">${c.name}</span><span class="category-weight">${c.weight}</span></button>`;
+      });
+      document.getElementById('categoryGrid').innerHTML = html;
+    }
+
+    function selectCategory(id) {
+      state.category = id;
+      renderCategoryGrid();
+      renderBrandSelect(); // Update brands based on category
+    }
+
+    function renderBrandSelect() {
+      const categoryBrands = brandsByCategory[state.category] || brandsByCategory.phone;
+      let html = '';
+      Object.keys(categoryBrands).forEach(b => {
+        html += `<option value="${b}">${b}</option>`;
+      });
+      document.getElementById('brandSelect').innerHTML = html;
+      updateModels();
+    }
+
+    function updateModels() {
+      const categoryBrands = brandsByCategory[state.category] || brandsByCategory.phone;
+      const brand = document.getElementById('brandSelect').value;
+      let html = '';
+      categoryBrands[brand].models.forEach(m => {
+        html += `<option value="${m}">${m}</option>`;
+      });
+      document.getElementById('modelSelect').innerHTML = html;
+      state.brand = brand;
+      state.model = categoryBrands[brand].models[0];
+    }
+
+    function renderConditions() {
+      let html = '';
+      conditions.forEach(c => {
+        let cls = state.conditions.includes(c.id) ? 'selected' : '';
+        html += `<button class="condition-item ${cls}" onclick="toggleCondition('${c.id}')"><span class="condition-check">${state.conditions.includes(c.id) ? '✓' : ''}</span><span class="condition-text">${c.text}</span></button>`;
+      });
+      document.getElementById('conditionList').innerHTML = html;
+    }
+
+    function toggleCondition(id) {
+      if(state.conditions.includes(id)) state.conditions = state.conditions.filter(c => c !== id);
+      else state.conditions.push(id);
+      renderConditions();
+      calculatePrice();
+    }
+
+    function selectTime(btn) {
+      document.querySelectorAll('.time-slot').forEach(el => el.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedTime = btn.textContent.split(' ')[0];
+    }
+
+    function calculatePrice() {
+      const base = basePrices[state.category] || 12500;
+      const penalty = state.conditions.reduce((sum,c) => sum + (conditions.find(cn => cn.id === c)?.impact || 0), 0);
+      finalPrice = Math.round(base * (1 + penalty));
+      if (finalPrice < 500) finalPrice = 500; // Minimum scrap value
+      document.getElementById('livePrice').textContent = '₨ ' + finalPrice.toLocaleString();
+    }
+
+    let currentStep = 1;
+    const totalSteps = 6;
+
+    function showStep(step) {
+      document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+      document.querySelector(`.step[data-step="${step}"]`)?.classList.add('active');
+      state.step = step;
+      renderProgress();
+    }
+
+    function nextStep() {
+      if(currentStep === 1 && !state.category) return alert('Please select a category');
+      if(currentStep === 2) { state.model = document.getElementById('modelSelect').value; }
+      if(currentStep === 4) { calculateFinalQuote(); }
+      if(currentStep < totalSteps) { currentStep++; showStep(currentStep); }
+    }
+
+    function prevStep() {
+      if(currentStep > 1) { currentStep--; showStep(currentStep); }
+    }
+
+    function calculateFinalQuote() {
+      const base = basePrices[state.category] || 12500;
+      const penalty = state.conditions.reduce((sum,c) => sum + (conditions.find(cn => cn.id === c)?.impact || 0), 0);
+      finalPrice = Math.round(base * (1 + penalty));
+      if (finalPrice < 500) finalPrice = 500; // Minimum scrap value
+      const comp = Math.round(finalPrice * 0.78);
+      const scrap = finalPrice - comp;
+      const ewaste = 0.15 + (state.conditions.length * 0.05);
+      document.getElementById('quoteAmount').textContent = '₨ ' + finalPrice.toLocaleString();
+      document.getElementById('compValue').textContent = '₨ ' + comp.toLocaleString();
+      document.getElementById('scrapValue').textContent = '₨ ' + scrap.toLocaleString();
+      document.getElementById('ewasteVal').textContent = ewaste.toFixed(2) + ' kg';
+      document.getElementById('quoteDevice').textContent = state.brand + ' ' + state.model;
+    }
+
+    function generateTrackingId() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let id = 'ESW-';
+      for(let i = 0; i < 8; i++) {
+        id += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return id;
+    }
+
+    function startPrinting() {
+      const name = document.getElementById('pickName').value;
+      const phone = document.getElementById('pickPhone').value;
+      const addr = document.getElementById('pickAddress').value;
+      if(!name || !phone || !addr) return alert('Please fill all fields');
+
+      // Generate tracking
+      trackingNumber = generateTrackingId();
+
+      // Show printing screen
+      currentStep = 'printing';
+      showStep('printing');
+
+      // Animate
+      const paper = document.getElementById('printPaper');
+      const status = document.getElementById('printStatus');
+
+      setTimeout(() => {
+        paper.classList.add('printing');
+        status.textContent = 'Printing Receipt...';
+      }, 500);
+
+      setTimeout(() => {
+        status.textContent = 'Finalizing...';
+        status.className = 'print-status processing';
+      }, 1500);
+
+      setTimeout(() => {
+        status.textContent = 'Complete!';
+        status.className = 'print-status done';
+
+        // Fill receipt
+        document.getElementById('trackingId').textContent = trackingNumber;
+        document.getElementById('recDevice').textContent = state.brand + ' ' + state.model;
+        document.getElementById('recCondition').textContent = state.conditions.length > 0 ? state.conditions.length + ' issue(s)' : 'Good';
+        document.getElementById('recAmount').textContent = '₨ ' + finalPrice.toLocaleString();
+        document.getElementById('recName').textContent = name;
+        document.getElementById('recPhone').textContent = phone;
+        document.getElementById('recAddress').textContent = addr + ', ' + document.getElementById('pickCity').value;
+        document.getElementById('recDate').textContent = document.getElementById('pickDate').value;
+        document.getElementById('recTime').textContent = selectedTime;
+
+        currentStep = 'success';
+        showStep('success');
+      }, 2500);
+    }
+
+    document.getElementById('brandSelect').addEventListener('change',updateModels);
+    init();
+  </script>
+</body>
+</html>
