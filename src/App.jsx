@@ -134,9 +134,7 @@ function Navbar() {
     <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl shadow-sm">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3">
         <a href="#home" className="flex items-center gap-2.5 font-black text-2xl tracking-tight transition-transform hover:scale-[1.02]">
-          <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-ink to-slate-800 text-limepop shadow-md">
-            <Recycle size={22} />
-          </span>
+          <img src="logo.png" alt="Eswap" className="h-10 w-10 rounded-xl object-cover shadow-md" />
           <span className="hidden sm:inline">Eswap</span>
         </a>
         <div className="hidden items-center gap-1 text-sm font-semibold text-slate-600 md:flex">

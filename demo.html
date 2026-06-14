@@ -14,7 +14,7 @@
     .container { max-width: 520px; margin: 0 auto; min-height: 100vh; padding: 20px; display: flex; flex-direction: column; }
     .header { text-align: center; padding: 12px 0 24px; }
     .logo { display: inline-flex; align-items: center; gap: 8px; font-weight: 900; font-size: 22px; text-decoration: none; color: var(--ink); }
-    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--ink), #1e293b); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--limepop); font-size: 18px; }
+    .logo-icon { width: 36px; height: 36px; border-radius: 10px; overflow: hidden; }
     .progress { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 24px; }
     .progress-step { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #94a3b8; }
     .progress-step.active { color: var(--lagoon); }
@@ -92,7 +92,7 @@
     .receipt__paper { width: 100%; max-width: 320px; background: white; border-radius: 16px; padding: 24px; box-shadow: 0 8px 32px rgba(15,23,42,0.12); animation: slideDown 1.5s ease forwards; opacity: 0; }
     .receipt__header { text-align: center; border-bottom: 2px dashed #e2e8f0; padding-bottom: 16px; margin-bottom: 16px; }
     .receipt__logo { font-weight: 900; font-size: 20px; color: var(--ink); display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .receipt__logo-icon { width: 28px; height: 28px; background: linear-gradient(135deg, var(--ink), #1e293b); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--limepop); font-size: 14px; }
+    .receipt__logo-icon { width: 28px; height: 28px; border-radius: 8px; overflow: hidden; }
     .receipt__id { font-size: 11px; color: #64748b; margin-top: 6px; font-family: monospace; letter-spacing: 0.05em; }
     .receipt__block { padding: 12px 0; border-bottom: 1px dotted #e2e8f0; }
     .receipt__block:last-of-type { border-bottom: none; }
@@ -112,7 +112,7 @@
 <body>
   <div class="container">
     <header class="header">
-      <a href="#" class="logo"><span class="logo-icon">↻</span>Eswap</a>
+      <a href="#" class="logo"><img src="logo.png" class="logo-icon" alt="Eswap">Eswap</a>
     </header>
     <div class="progress" id="progress"></div>
     <div class="card">
@@ -223,7 +223,7 @@
             <div class="receipt__paper" id="receipt">
               <div class="receipt__header">
                 <div class="receipt__logo">
-                  <span class="receipt__logo-icon">↻</span>
+                  <img src="logo.png" class="receipt__logo-icon" alt="Eswap">
                   Eswap
                 </div>
                 <div class="receipt__id">Tracking: <span id="trackingId">ESW-XXXXXXXX</span></div>
